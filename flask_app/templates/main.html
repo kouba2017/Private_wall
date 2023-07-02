@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <div id="container">
+        <div id="top">
+            <h1>Coding Dojo Wall</h1>
+            <h2>Welcome Mr.{{user_in.first_name}}!!!</h2>
+            <a class="btn btn-primary" href="/logout">Logout</a>
+        </div>
+        <div id="buttom">
+            <div class="col-5 bg-dark text-light text-center my-5 p-4">
+                <div class="border-bottom border-warning">
+                    <h1>{{number_of_messages}} messages for you</h1>
+                </div>
+                <div>
+                    {%for msg in all_messages%}
+                        {%if user_in.id==msg.contact_id%}
+                        <div>
+                            {%for person in all_users%}
+                                {%if msg.user_id==person.id%}
+                                <h2>{{person.first_name}} said {{msg.time_span()}}</h2>
+                                <p>{{msg.content}}</p>
+                                <a class="btn btn-danger" href="/message/delete/{{msg.id}}">Delete</a>
+                                {%endif%}
+                            {%endfor%}
+                        </div>
+                        {%endif%}
+                    {%endfor%}
+                </div>
+            </div>
+            <div class="col-5 bg-dark text-light text-center my-5 p-4">
+                <div class="border-bottom border-warning">
+                    <h1>Send a Message:</h1>
+                    <p>{{messages_sent|length}} sent so far</p>
+                </div>
+                <form action="/message/create" class="form-group" method="post">
+                {%for contact in all_users%}
+                    {%if user_in.id != contact.id%}
+                        <div class="d-flex flex-column">
+                            <input type="hidden" name="user_id" value={{session.user_id}} >
+                            <input type="hidden" name="contact_id" value={{contact.id}} id="">
+                            <label for="contact_id">Message {{contact.first_name}}:</label>
+                            <textarea name="content" class="form-control" id="" cols="30" rows="5"></textarea>
+                            <button type="submit" class="btn btn-primary">Message</button>
+                        </div>
+                    {%endif%}
+                {%endfor%}
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
